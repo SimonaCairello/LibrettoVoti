@@ -3,64 +3,69 @@ package it.polito.tdp.libretto.model;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Memorizza e gestisce un insieme di voti superati.
- * 
- * @author Fulvio
- *
- */
 public class Libretto {
 
-	private List<Voto> voti = new ArrayList<>();
+	private List<Voto> voti = new ArrayList<Voto>();
 
-	/**
-	 * Aggiunge un nuovo voto al libretto
-	 * 
-	 * @param v Voto da aggiungere
-	 */
-	public void add(Voto v) {
-		this.voti.add(v);
-	}
-
-	/**
-	 * Dato un Libretto, restituisce una stringa nella quale vi sono solamente i
-	 * voti pari al valore specificato
-	 * 
-	 * @param voto valore specificato
-	 * @return stringa formattata per visualizzare il sotto-libretto
-	 */
-	public String stampaVotiUguali(int voto) {
-		String s = "";
-		for (Voto v : this.voti) {
-			if (v.getVoto() == voto) {
-				s += v.toString() + "\n";
-			}
+	public boolean add(Voto v) {
+		if(this.isConflitto(v) || this.isDuplicato(v))
+			return false;
+		else {
+			this.voti.add(v);
+			return true;
 		}
+	}
+	
+	public String toString() {
+		String s = "";
+		for(Voto v : voti)
+			s += v.toString()+"\n";
 		return s;
 	}
 	
-	/**
-	 * Genera un nuovo libretto, a partire da quello esistente,
-	 * che conterrà esclusivamenti i voti con votazione pari a quella specificata.
-	 * @param voto votazione specificata
-	 * @return nuovo Libretto "ridotto"
-	 */
-	public Libretto estraiVotiUguali(int voto) {
-		Libretto nuovo = new Libretto() ;
-		for(Voto v: this.voti) {
-			if(v.getVoto()==voto) {
-				nuovo.add(v);
-			}
-		}
-		return nuovo ;
-	}
-
-	public String toString() {
+	public String stampaVotiUguali(int voto) {
 		String s = "";
-		for (Voto v : this.voti) {
-			s += v.toString() + "\n";
-		}
+		for (Voto v : this.voti) 
+			if (v.getVoto() == voto) 
+				s += v.toString() + "\n";
 		return s;
 	}
 
+	public Libretto estraiVotiUguali(int voto) {
+		Libretto nuovo = new Libretto();
+		
+		for(Voto v : voti)
+			if(v.getVoto()==voto)
+				nuovo.add(v);
+		
+		return nuovo;
+	}
+
+	public Voto cercaNomeCorso(String nomeCorso) {
+		/* for(Voto v : this.voti)
+			if(nomeCorso.equals(v.getCorso()))
+				return v;
+		return null; */
+		
+		int pos = this.voti.indexOf(new Voto(nomeCorso, 0, null));
+		
+		if(pos!=-1)
+			return this.voti.get(pos);
+		return null;
+	}
+	
+	public boolean isDuplicato(Voto v) {
+		Voto esiste = this.cercaNomeCorso(v.getCorso());
+		if(esiste==null)
+			return false;
+		return (esiste.getVoto()==v.getVoto());
+	}
+	
+	public boolean isConflitto(Voto v) {
+		Voto esiste = this.cercaNomeCorso(v.getCorso());
+		if(esiste==null)
+			return false;
+		return (esiste.getVoto()!=v.getVoto());
+	}
+	
 }
