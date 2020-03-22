@@ -29,6 +29,25 @@ public class TestLibretto {
 		Voto economia3 = new Voto("Economia", 21, LocalDate.now());
 		System.out.println("Economia con 24 è duplicato: "+lib.isDuplicato(economia2)+"/ conflitto: "+lib.isDuplicato(economia2));
 		System.out.println("Economia con 21 è duplicato: "+lib.isDuplicato(economia3)+"/ conflitto: "+lib.isDuplicato(economia3));
+		
+		Libretto migliorato = lib.creaLibrettoMigliorato();
+		System.out.println("Miglioramento del libretto");
+		System.out.println(lib);
+		System.out.println(migliorato);
+		
+		Libretto alfabetico = new Libretto(lib);
+		alfabetico.ordinaPerCorso();
+		System.out.println(alfabetico);
+		
+		Libretto votidecrescenti = new Libretto(lib);
+		votidecrescenti.ordinaPerCorso();
+		System.out.println(votidecrescenti);
+		
+		lib.add(new Voto("Chimica", 19, LocalDate.now()));
+		lib.ordinaPerCorso();
+		System.out.println(lib);
+		lib.cancellaVotiScarsi();
+		System.out.println(lib);
 	}
 
 	public static void main(String[] args) {
